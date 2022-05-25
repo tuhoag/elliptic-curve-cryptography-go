@@ -1,4 +1,4 @@
-package main
+package tecc
 
 import (
 	"crypto/aes"
@@ -14,29 +14,29 @@ import (
 	"github.com/bwesterb/go-ristretto"
 )
 
-func main() {
-	s1, p1 := GenerateECCKeys()
+// func main() {
+// 	s1, p1 := GenerateECCKeys()
 
-	message := "hello world"
+// 	message := "hello ECIES"
 
-	cipher, err := ECIESEncrypt(p1, []byte(message))
-	if err != nil {
-		fmt.Println(err)
-	}
+// 	cipher, err := ECIESEncrypt(p1, []byte(message))
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
 
-	decryptedData, err := ECIESDecrypt(s1, cipher)
-	if err != nil {
-		fmt.Println(err)
-	}
+// 	decryptedData, err := ECIESDecrypt(s1, cipher)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
 
-	decryptedMessage := string(decryptedData)
+// 	decryptedMessage := string(decryptedData)
 
-	if message != decryptedMessage {
-		fmt.Printf("Plaintext: %s != decrypted text: %s", message, decryptedMessage)
-	} else {
-		fmt.Println("Correct")
-	}
-}
+// 	if message != decryptedMessage {
+// 		fmt.Printf("Plaintext: %s != decrypted text: %s", message, decryptedMessage)
+// 	} else {
+// 		fmt.Printf("Plaintext: %s = decrypted text: %s", message, decryptedMessage)
+// 	}
+// }
 
 type ECIESCipher struct {
 	EncryptedData []byte   `json:"encryptedData"`
@@ -87,8 +87,11 @@ func ECIESEncrypt(publicKey *ristretto.Point, message []byte) (*ECIESCipher, err
 	h.Write(encryptedData)
 
 	// create cipher object
+	var temp [32]byte
+	copy(temp[:], p.Bytes())
+
 	cipher := ECIESCipher{
-		SharedKey:     p.Bytes(),
+		SharedKey:     temp,
 		Hash:          h.Sum(nil),
 		EncryptedData: encryptedData,
 	}
@@ -127,7 +130,7 @@ func ECIESDecrypt(privateKey *ristretto.Scalar, eciesCipher *ECIESCipher) ([]byt
 
 	nonceSize := gcm.NonceSize()
 	if len(eciesCipher.EncryptedData) < nonceSize {
-		return nil, fmt.Errorf("Cipher text length %d < nonce size %s", len(eciesCipher.EncryptedData), nonceSize)
+		return nil, fmt.Errorf("Cipher text length %d < nonce size %d", len(eciesCipher.EncryptedData), nonceSize)
 	}
 
 	nonce, cipherData := eciesCipher.EncryptedData[:nonceSize], eciesCipher.EncryptedData[nonceSize:]

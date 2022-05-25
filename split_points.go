@@ -1,38 +1,8 @@
-package main
+package tecc
 
 import (
-	"fmt"
 	"github.com/bwesterb/go-ristretto"
-	// "strings"
 )
-
-func main() {
-	var targetPoint ristretto.Point
-	targetPoint.Rand()
-	n := 3
-
-	fmt.Println("targetPoint:", targetPoint)
-	fmt.Println("n:", n)
-
-	points := Split(&targetPoint, n)
-
-	fmt.Println(points)
-	var sum ristretto.Point
-	sum.SetZero()
-
-	fmt.Println("init sum: ", sum)
-
-	for i := 0; i < n; i++ {
-		sum.Add(&sum, points[i])
-		fmt.Println("sum:", sum, "point:", points[i])
-	}
-
-	if sum.Equals(&targetPoint) {
-		fmt.Println("correct")
-	} else {
-		fmt.Println("incorrect")
-	}
-}
 
 func Split(targetPoint *ristretto.Point, n int) []*ristretto.Point {
 	points := make([]*ristretto.Point, n)
