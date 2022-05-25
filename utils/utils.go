@@ -2,6 +2,8 @@ package utils
 
 import (
 	b64 "encoding/base64"
+	"fmt"
+
 	ristretto "github.com/bwesterb/go-ristretto"
 )
 
@@ -15,7 +17,10 @@ func ConvertStringToPoint(s string) (*ristretto.Point, error) {
 		return nil, err
 	}
 
-	point := ConvertBytesToPoint(bytes)
+	point, err := ConvertBytesToPoint(bytes)
+	if err != nil {
+		return nil, fmt.Errorf("Cannot convert %s to point", s)
+	}
 
 	return point, nil
 }
@@ -27,33 +32,39 @@ func ConvertStringToScalar(s string) (*ristretto.Scalar, error) {
 		return nil, err
 	}
 
-	scalar := ConvertBytesToScalar(bytes)
+	scalar, err := ConvertBytesToScalar(bytes)
+	if err != nil {
+		return nil, fmt.Errorf("Cannot convert %s to scalar", s)
+	}
 
 	return scalar, nil
 }
 
-func ConvertBytesToPoint(b []byte) *ristretto.Point {
+func ConvertBytesToPoint(b []byte) (*ristretto.Point, error) {
 	var H ristretto.Point
 	var hBytes [32]byte
 
 	copy(hBytes[:32], b[:])
 
-	// result := H.SetBytes(&hBytes)
+	result := H.SetBytes(&hBytes)
+
+	if !result {
+		return nil, fmt.Errorf("Cannot convert point")
+	}
 	// fmt.Println("in convertBytesToPoint result:", result)
 
-	return &H
+	return &H, nil
 }
 
-func ConvertBytesToScalar(b []byte) *ristretto.Scalar {
+func ConvertBytesToScalar(b []byte) (*ristretto.Scalar, error) {
 	var r ristretto.Scalar
 	var rBytes [32]byte
 
 	copy(rBytes[:32], b[:])
 
-	// result := r.SetBytes(&rBytes)
-	// fmt.Println("in convertBytesToScalar result:", result)
+	r.SetBytes(&rBytes)
 
-	return &r
+	return &r, nil
 }
 
 func ConvertScalarToString(scalar *ristretto.Scalar) string {
