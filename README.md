@@ -1,4 +1,4 @@
-# Elliptic Curve Cryptography Golang
+# Elliptic Curve Cryptography in Go
 
 This repository contains the implementation of several Elliptic Curve Cryptography Algorithms. The algorithms rely on [Go-Ristretto](https://github.com/bwesterb/go-ristretto) to manage points and scalars.
 I put each algorithm in a separate sub-module, so it can be used independently with other ones.
