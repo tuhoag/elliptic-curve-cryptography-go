@@ -1,4 +1,4 @@
-package tecc
+package utils
 
 import (
 	b64 "encoding/base64"

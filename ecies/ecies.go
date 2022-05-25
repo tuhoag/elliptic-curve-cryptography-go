@@ -1,4 +1,4 @@
-package tecc
+package ecies
 
 import (
 	"crypto/aes"
@@ -13,30 +13,6 @@ import (
 
 	"github.com/bwesterb/go-ristretto"
 )
-
-// func main() {
-// 	s1, p1 := GenerateECCKeys()
-
-// 	message := "hello ECIES"
-
-// 	cipher, err := ECIESEncrypt(p1, []byte(message))
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-
-// 	decryptedData, err := ECIESDecrypt(s1, cipher)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-
-// 	decryptedMessage := string(decryptedData)
-
-// 	if message != decryptedMessage {
-// 		fmt.Printf("Plaintext: %s != decrypted text: %s", message, decryptedMessage)
-// 	} else {
-// 		fmt.Printf("Plaintext: %s = decrypted text: %s", message, decryptedMessage)
-// 	}
-// }
 
 type ECIESCipher struct {
 	EncryptedData []byte   `json:"encryptedData"`
@@ -54,7 +30,7 @@ func GenerateECCKeys() (*ristretto.Scalar, *ristretto.Point) {
 	return &s, &p
 }
 
-func ECIESEncrypt(publicKey *ristretto.Point, message []byte) (*ECIESCipher, error) {
+func Encrypt(publicKey *ristretto.Point, message []byte) (*ECIESCipher, error) {
 	// generate a random key
 	s, p := GenerateECCKeys()
 
@@ -99,7 +75,7 @@ func ECIESEncrypt(publicKey *ristretto.Point, message []byte) (*ECIESCipher, err
 	return &cipher, nil
 }
 
-func ECIESDecrypt(privateKey *ristretto.Scalar, eciesCipher *ECIESCipher) ([]byte, error) {
+func Decrypt(privateKey *ristretto.Scalar, eciesCipher *ECIESCipher) ([]byte, error) {
 	var S ristretto.Point
 	S.SetBytes(&eciesCipher.SharedKey)
 

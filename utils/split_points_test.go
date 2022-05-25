@@ -1,4 +1,4 @@
-package tecc
+package utils
 
 import (
 	"fmt"

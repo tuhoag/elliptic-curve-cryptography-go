@@ -1,4 +1,4 @@
-package tecc
+package pedersen
 
 import (
 	"github.com/bwesterb/go-ristretto"

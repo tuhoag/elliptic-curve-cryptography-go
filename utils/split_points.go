@@ -1,4 +1,4 @@
-package tecc
+package utils
 
 import (
 	"github.com/bwesterb/go-ristretto"

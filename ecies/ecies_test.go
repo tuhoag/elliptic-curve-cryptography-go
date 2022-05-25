@@ -1,4 +1,4 @@
-package tecc
+package ecies
 
 import (
 	"testing"
@@ -9,12 +9,12 @@ func TestEncryptionAndDecryptionCorrectness(t *testing.T) {
 
 	message := "hello ECIES"
 
-	cipher, err := ECIESEncrypt(p1, []byte(message))
+	cipher, err := Encrypt(p1, []byte(message))
 	if err != nil {
 		t.Error(err)
 	}
 
-	decryptedData, err := ECIESDecrypt(s1, cipher)
+	decryptedData, err := Decrypt(s1, cipher)
 	if err != nil {
 		t.Error(err)
 	}
